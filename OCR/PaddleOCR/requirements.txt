@@ -1,0 +1,7 @@
+paddleocr
+
+# CPU Version of PaddlePaddle
+paddlepaddle==3.0.0 --extra-index-url https://www.paddlepaddle.org.cn/packages/stable/cpu/
+
+#CUDA Version of PaddlePaddle
+# paddlepaddle-gpu==3.0.0 --extra-index-url https://www.paddlepaddle.org.cn/packages/stable/cu118/

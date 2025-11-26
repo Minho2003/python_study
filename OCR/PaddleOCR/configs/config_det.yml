@@ -1,0 +1,45 @@
+Global:
+  debug: false
+  use_gpu: true
+  epoch_num: 30
+  log_smooth_window: 20
+  save_model_dir: ./exps/det
+  print_batch_step: 1200
+  save_epoch_step: 10
+  pretrained_model: ./model/pretrained/det/PP-OCRv5_mobile_det
+
+Optimizer:
+  name: Adam
+  lr:
+    learning_rate: 0.001
+
+Train:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ./data/train
+    label_file_list: ["./data/train/det_label.txt"]
+    transforms:
+      - DecodeImage: { img_mode: "RGB", channel_first: false }
+      - DBNetLabelEncode: {}
+      - DBNetResize: { limit_side_len: 960 }
+      - DBNetMakeBorderMap: {}
+      - DBNetMakeShrinkMap: {}
+      - KeepKeys: { keep_keys: ["image", "threshold_map", "shrink_map", "shrink_mask", "threshold_mask"] }
+
+  loader:
+    shuffle: true
+    batch_size: 4
+    num_workers: 2
+
+Eval:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ./data/val
+    label_file_list: ["./data/val/det_label.txt"]
+    transforms:
+      - DecodeImage: { img_mode: "RGB", channel_first: false }
+      - DBNetLabelEncode: {}
+      - DBNetResize: { limit_side_len: 960 }
+      - DBNetMakeBorderMap: {}
+      - DBNetMakeShrinkMap: {}
+      - KeepKeys: { keep_keys: ["image", "threshold_map", "shrink_map", "shrink_mask", "threshold_mask"] }

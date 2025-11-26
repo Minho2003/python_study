@@ -1,0 +1,44 @@
+Global:
+  use_gpu: true
+  epoch_num: 20
+  log_smooth_window: 20
+  save_model_dir: ./output/rec
+  print_batch_step: 10
+  save_epoch_step: 1
+  character_dict_path: ./ppocr/utils/ppocr_keys_v1.txt
+  character_type: ch  # 'korean'으로 바꿔도 됨
+  max_text_length: 25
+  infer_mode: false
+  pretrained_model: ./pretrained/rec/PP-OCRv5_mobile_rec
+  checkpoints: ""
+
+Optimizer:
+  name: Adam
+  lr:
+    learning_rate: 0.0001
+
+Train:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ./data/train
+    label_file_list: ["./data/train/label.txt"]
+    transforms:
+      - DecodeImage: { img_mode: "RGB", channel_first: false }
+      - CTCLabelEncode: {}
+      - RecResizeImg: { image_shape: [3, 48, -1] }
+      - KeepKeys: { keep_keys: ["image", "label", "length"] }
+  loader:
+    shuffle: true
+    batch_size: 16
+    num_workers: 2
+
+Eval:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ./data/val
+    label_file_list: ["./data/val/label.txt"]
+    transforms:
+      - DecodeImage: { img_mode: "RGB", channel_first: false }
+      - CTCLabelEncode: {}
+      - RecResizeImg: { image_shape: [3, 48, -1] }
+      - KeepKeys: { keep_keys: ["image", "label", "length"] }
